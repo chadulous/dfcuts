@@ -1,0 +1,32 @@
+name: Deploy
+
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Setup NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install packages
+        run: npm i
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: griddle
+          entrypoint: main.ts
+          root: deno
